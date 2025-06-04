@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: store-postgres-service
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pwd123
+      POSTGRES_DB: project_database
+    ports:
+      - "5432:5432"
+    networks:
+      - my-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  spring-app:
+    container_name: store-app
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/project_database
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: pwd123
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    external: true
+
+volumes:
+  postgres_data:

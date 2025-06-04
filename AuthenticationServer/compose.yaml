@@ -1,0 +1,43 @@
+services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: some_password
+    networks:
+      - my-network
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: some_password
+      ME_CONFIG_MONGODB_URL: mongodb://root:some_password@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+    networks:
+      - my-network
+
+  node-auth:
+    container_name: node-auth-app
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    networks:
+      - my-network
+    environment:
+      - MONGO_URL=mongodb://root:some_password@mongo:27017/
+      - PORT=5050
+      - ACCESS_TOKEN_SECRET=SERVER_SIDE_SECRET
+    ports:
+      - 5050:5050
+
+networks:
+  my-network:
+    external: true
+
+volumes:
+  postgres_data:
