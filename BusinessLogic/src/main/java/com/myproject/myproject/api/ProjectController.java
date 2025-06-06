@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RequestMapping("/project")
+@RequestMapping("/project") // TODO change to storeapi
 @RestController
 public class ProjectController {
 
@@ -78,7 +78,7 @@ public class ProjectController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Adds the requested item to the Cart of the user with the requested token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ItemDTO.class))),
+            @ApiResponse(responseCode = "202", description = "Adds the requested item to the Cart of the user with the requested token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartDTO.class))),
             @ApiResponse(responseCode = "400", description = "Token is not valid or Product out of stock"),
             @ApiResponse(responseCode = "404", description = "Product does not exist")
     })
@@ -89,7 +89,7 @@ public class ProjectController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Removes the requested item from the Cart of the user with the requested token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ItemDTO.class))),
+            @ApiResponse(responseCode = "202", description = "Removes the requested item from the Cart of the user with the requested token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartDTO.class))),
             @ApiResponse(responseCode = "400", description = "Token is not valid or Product out of stock"),
             @ApiResponse(responseCode = "404", description = "Product does not exist")
     })

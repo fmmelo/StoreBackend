@@ -196,7 +196,7 @@ public class StoreService {
         cart.addToTotal(product.getPrice() * quantity);
         cartRepo.save(cart);
 
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.accepted().body(new CartDTO(cart));
     }
 
     public ResponseEntity<?> removeFromCart(Long itemId, int quantity, String token) {
@@ -231,7 +231,7 @@ public class StoreService {
         cart.subtractFromTotal(product.getPrice() * quantity);
         cartRepo.save(cart);
 
-        return ResponseEntity.ok().body("Product Removed");
+        return ResponseEntity.ok().body(new CartDTO(cart));
     }
 
     public ResponseEntity<?> getCart(String token) {

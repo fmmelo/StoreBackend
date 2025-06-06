@@ -57,8 +57,7 @@ public class Cart {
     }
 
     public void checkout() {
-        this.products.forEach(p -> p.setCart(null));
-        this.products = new ArrayList<>();
+        this.products.removeAll(this.products);
         this.total = 0;
     }
 
