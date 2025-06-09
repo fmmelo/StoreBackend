@@ -3,9 +3,9 @@ services:
     image: postgres:latest
     container_name: store-postgres-service
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PWD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pwd123
+      POSTGRES_DB: project_database
     ports:
       - "5432:5432"
     networks:
@@ -19,9 +19,9 @@ services:
       context: ./
       dockerfile: ./Dockerfile
     environment:
-      SPRING_DATASOURCE_URL: ${DATA_BASE_URL}
-      SPRING_DATASOURCE_USERNAME: ${DB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PWD}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/project_database
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: pwd123
     depends_on:
       - postgres
     ports:
