@@ -2,15 +2,21 @@ const { UserExistsException, MissingCredentialsException, UserNotFoundException,
 const { User } = require("../schemas/User");
 const jwt = require('jsonwebtoken');
 
-const registerUser = async ({ username, password }) => {
-    if (!username || !password)
+const registerUser = async ({ username, email, password }) => {
+    if (!username || !email || !password)
         throw new MissingCredentialsException();
 
     if (await User.exists({ username: username }))
         throw new UserExistsException(username);
 
+    /** 
+     * TODO create jwt with user info, and send email for confirmation.
+     * Email should send a link to a webpage that sends a request to validate the account
+     */
+
     const user = new User({
         username: username,
+        email: email,
         password: password
     });
     await user.save();
@@ -65,9 +71,21 @@ const verifyToken = async (token) => {
     return tokenObj;
 }
 
+const userExists = async (username) => {
+    if (!username)
+        throw new EmptyUsernameException();
+
+    const user = await User.findOne({ username: username });
+    if (user)
+        return true;
+
+    return false
+}
+
 module.exports = {
     registerUser,
     loginUser,
     logoutUser,
-    verifyToken
+    verifyToken,
+    userExists
 }

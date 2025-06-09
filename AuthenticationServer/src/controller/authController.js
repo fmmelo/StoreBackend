@@ -1,4 +1,4 @@
-const { UserNotFoundException, WrongCredentialsException, MissingCredentialsException, UserExistsException, MissingTokenException, InvalidTokenException } = require("../exception/userExceptions");
+const { UserNotFoundException, WrongCredentialsException, MissingCredentialsException, UserExistsException, MissingTokenException, InvalidTokenException, EmptyUsernameException } = require("../exception/userExceptions");
 const service = require("../service/authService")
 const { StatusCodes } = require('http-status-codes')
 
@@ -17,7 +17,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const user = await service.loginUser(req.body.user);
-        res.status(StatusCodes.CREATED).json(user.token);
+        res.status(StatusCodes.CREATED).json(user);
     } catch (e) {
         if (e instanceof MissingCredentialsException)
             res.status(StatusCodes.BAD_REQUEST).send(e.message);
@@ -54,9 +54,24 @@ const verifyToken = async (req, res) => {
     }
 }
 
+const userExists = async (req, res) => {
+    try {
+        const username = req.body.username
+        const exists = await service.userExists(username)
+        if (exists)
+            res.status(StatusCodes.CONFLICT).send()
+        else
+            res.status(StatusCodes.ACCEPTED).send()
+    } catch (e) {
+        if (e instanceof EmptyUsernameException)
+            res.status(StatusCodes.BAD_REQUEST).send(e.message)
+    }
+}
+
 module.exports = {
     register,
     login,
     logout,
-    verifyToken
+    verifyToken,
+    userExists
 }

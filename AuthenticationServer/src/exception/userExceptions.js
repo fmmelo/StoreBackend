@@ -40,11 +40,19 @@ class InvalidTokenException extends Error {
     }
 }
 
+class EmptyUsernameException extends Error {
+    constructor() {
+        super('Username cannot be empty')
+        this.name = this.constructor.name
+    }
+}
+
 module.exports = {
     MissingCredentialsException,
     UserExistsException,
     UserNotFoundException,
     WrongCredentialsException,
     MissingTokenException,
-    InvalidTokenException
+    InvalidTokenException,
+    EmptyUsernameException
 }
