@@ -11,7 +11,7 @@ router.post('/logout', authController.logout);
 
 router.post('/token_verify', authController.verifyToken);
 
-router.post('/userexists', authController.userExists);
+router.post('/user_exists', authController.userExists);
 
 router.post('/testmail', async (req, res) => {
     const email = req.body.email

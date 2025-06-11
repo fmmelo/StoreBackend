@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import com.myproject.myproject.api.DTO.OrderDTO;
 import com.myproject.myproject.api.DTO.CartOperationDTO;
 import com.myproject.myproject.api.DTO.CartDTO;
-import com.myproject.myproject.api.DTO.ItemDTO;
 import com.myproject.myproject.api.DTO.ProductDTO;
 import com.myproject.myproject.response.ErrorResponse;
 import com.myproject.myproject.service.StoreService;
@@ -18,7 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RequestMapping("/project") // TODO change to storeapi
+@RequestMapping("/storeapi")
 @RestController
 public class ProjectController {
 
@@ -42,7 +41,7 @@ public class ProjectController {
             @ApiResponse(responseCode = "200", description = "Returns the list (empty or not) of all products", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))),
             @ApiResponse(responseCode = "400", description = "Token is not valid")
     })
-    @GetMapping("/product")
+    @GetMapping("/products")
     ResponseEntity<?> getAllProducts(@RequestHeader(name = "authorization") String token) {
         return storeService.getAllProducts(token);
     }
