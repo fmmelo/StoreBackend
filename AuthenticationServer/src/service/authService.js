@@ -1,4 +1,4 @@
-const { UserExistsException, MissingCredentialsException, UserNotFoundException, WrongCredentialsException, MissingTokenException, InvalidTokenException, UserNotActiveException } = require("../exception/userExceptions");
+const { UserExistsException, MissingCredentialsException, UserNotFoundException, WrongCredentialsException, MissingTokenException, InvalidTokenException, UserNotActiveException, UserIsAlreadyActiveException } = require("../exception/userExceptions");
 const { User } = require("../schemas/User");
 const jwt = require('jsonwebtoken');
 const { sendAccountConfirmationEmail } = require("../utils/mail");
@@ -31,6 +31,9 @@ const activateUser = async (token) => {
     const user = await User.findOne({username: tokenObj.username})
     if(!user) 
         throw new UserNotFoundException(tokenObj.username)
+
+    if(user.isActive)
+        throw new UserIsAlreadyActiveException(tokenObj.username)
 
     user.isActive = true;
     user.save();

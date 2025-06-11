@@ -48,8 +48,15 @@ class EmptyUsernameException extends Error {
 }
 
 class UserNotActiveException extends Error {
-    constructor() {
-        super('User has not active their account yet.')
+    constructor(username) {
+        super(`User ${username} has not active their account yet.`)
+        this.name = this.constructor.name
+    }
+}
+
+class UserIsAlreadyActiveException extends Error {
+    constructor(username) {
+        super(`User ${username} has already activated their account.`)
         this.name = this.constructor.name
     }
 }
@@ -62,5 +69,6 @@ module.exports = {
     MissingTokenException,
     InvalidTokenException,
     EmptyUsernameException,
-    UserNotActiveException
+    UserNotActiveException,
+    UserIsAlreadyActiveException
 }

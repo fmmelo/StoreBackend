@@ -25,7 +25,12 @@ const activateUser = async (req, res) => {
             res.status(StatusCodes.ACCEPTED).send("Account created");
         }
     } catch(e) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send()
+        if(e instanceof InvalidTokenException)
+            res.status(StatusCodes.UNAUTHORIZED).send(e.message)
+        else if(e instanceof UserNotFoundException)
+            res.status(StatusCodes.NOT_FOUND).send(e.message)
+        else if(e instanceof UserIsAlreadyActiveException)
+            res.status(StatusCodes.BAD_REQUEST).send(e.message)
     }
 }
 
