@@ -47,6 +47,13 @@ class EmptyUsernameException extends Error {
     }
 }
 
+class UserNotActiveException extends Error {
+    constructor() {
+        super('User has not active their account yet.')
+        this.name = this.constructor.name
+    }
+}
+
 module.exports = {
     MissingCredentialsException,
     UserExistsException,
@@ -54,5 +61,6 @@ module.exports = {
     WrongCredentialsException,
     MissingTokenException,
     InvalidTokenException,
-    EmptyUsernameException
+    EmptyUsernameException,
+    UserNotActiveException
 }

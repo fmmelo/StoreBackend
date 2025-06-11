@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
     },
     token: { type: String, default: undefined },
     refreshToken: { type: String, default: undefined },
+    isActive: { type: Boolean, default: false }
 });
 
 module.exports.User = mongoose.model("User", userSchema);

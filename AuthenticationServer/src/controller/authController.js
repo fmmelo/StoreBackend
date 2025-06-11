@@ -16,6 +16,19 @@ const register = async (req, res) => {
     }
 }
 
+const activateUser = async (req, res) => {
+    try {
+        const token = req.params.token
+        console.log(token)
+        const tokenObj = await service.activateUser(token)
+        if(tokenObj) {
+            res.status(StatusCodes.ACCEPTED).send("Account created");
+        }
+    } catch(e) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send()
+    }
+}
+
 const login = async (req, res) => {
     try {
         const user = await service.loginUser(req.body.user);
@@ -25,6 +38,8 @@ const login = async (req, res) => {
             res.status(StatusCodes.BAD_REQUEST).send(e.message);
         else if (e instanceof UserNotFoundException)
             res.status(StatusCodes.NOT_FOUND).send(e.message);
+        else if(e instanceof UserNotActiveException)
+            res.status(StatusCodes.BAD_REQUEST).send(e.message);
         else if (e instanceof WrongCredentialsException)
             res.status(StatusCodes.UNAUTHORIZED).send(e.message);
     }
@@ -51,6 +66,8 @@ const verifyToken = async (req, res) => {
     } catch (e) {
         if (e instanceof MissingTokenException)
             res.status(StatusCodes.BAD_REQUEST).send(e.message);
+        else if(e instanceof UserNotActiveException)
+            res.status(StatusCodes.BAD_REQUEST).send(e.message);
         else if (e instanceof InvalidTokenException)
             res.status(StatusCodes.UNAUTHORIZED).send(e.message);
     }
@@ -72,6 +89,7 @@ const userExists = async (req, res) => {
 
 module.exports = {
     register,
+    activateUser,
     login,
     logout,
     verifyToken,

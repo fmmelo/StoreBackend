@@ -1,6 +1,7 @@
-const { UserExistsException, MissingCredentialsException, UserNotFoundException, WrongCredentialsException, MissingTokenException, InvalidTokenException } = require("../exception/userExceptions");
+const { UserExistsException, MissingCredentialsException, UserNotFoundException, WrongCredentialsException, MissingTokenException, InvalidTokenException, UserNotActiveException } = require("../exception/userExceptions");
 const { User } = require("../schemas/User");
 const jwt = require('jsonwebtoken');
+const { sendAccountConfirmationEmail } = require("../utils/mail");
 
 const registerUser = async ({ username, email, password }) => {
     if (!username || !email || !password)
@@ -9,10 +10,7 @@ const registerUser = async ({ username, email, password }) => {
     if (await User.exists({ username: username }))
         throw new UserExistsException(username);
 
-    /** 
-     * TODO create jwt with user info, and send email for confirmation.
-     * Email should send a link to a webpage that sends a request to validate the account
-     */
+    const token = jwt.sign({ username, email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' })
 
     const user = new User({
         username: username,
@@ -20,6 +18,22 @@ const registerUser = async ({ username, email, password }) => {
         password: password
     });
     await user.save();
+    
+    sendAccountConfirmationEmail([email], token)
+    return token;
+}
+
+const activateUser = async (token) => {
+    const tokenObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) throw new InvalidTokenException();
+        return user;
+    })
+    const user = await User.findOne({username: tokenObj.username})
+    if(!user) 
+        throw new UserNotFoundException(tokenObj.username)
+
+    user.isActive = true;
+    user.save();
 
     return user;
 }
@@ -32,6 +46,9 @@ const loginUser = async ({ username, password }) => {
     const user = await User.findOne({ username: username });
     if (!user)
         throw new UserNotFoundException(username);
+
+    if(!user.isActive)
+        throw new UserNotActiveException();
 
     if (user.password !== password)
         throw new WrongCredentialsException();
@@ -63,6 +80,9 @@ const verifyToken = async (token) => {
     if (!user)
         throw new InvalidTokenException(token);
 
+    if(!user.isActive)
+        throw new UserNotActiveException();
+
     const tokenObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) throw new InvalidTokenException();
         return user;
@@ -87,5 +107,6 @@ module.exports = {
     loginUser,
     logoutUser,
     verifyToken,
-    userExists
+    userExists,
+    activateUser
 }
