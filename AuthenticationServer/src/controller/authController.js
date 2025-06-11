@@ -11,6 +11,8 @@ const register = async (req, res) => {
             res.status(StatusCodes.BAD_REQUEST).send(e.message);
         else if (e instanceof UserExistsException)
             res.status(StatusCodes.BAD_REQUEST).send(e.message);
+        else
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(e.message);
     }
 }
 

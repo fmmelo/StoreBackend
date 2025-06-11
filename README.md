@@ -65,6 +65,9 @@ Endpoints:
 
 <b>Everything is dockerized using Docker Compose.</b>
 
+First create the network <code>my-network</code> shared by all containers in both compose.yaml files
+<code>docker network create my-network</code>
+
 In each server directory run: <code>docker-compose up --build -d</code> to build and run all services for each server application.
 
 <code>cd AuthenticationServer

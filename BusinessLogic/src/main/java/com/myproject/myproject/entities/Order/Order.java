@@ -29,14 +29,18 @@ public class Order {
     @Column
     private double shipping;
 
+    @Column
+    private String username;
+
     public Order() {
         products = new ArrayList<>();
     }
 
-    public Order(List<OrderProduct> products, double total, double shipping) {
+    public Order(List<OrderProduct> products, double total, double shipping, String username) {
         this.products = products;
         this.total = total;
         this.shipping = shipping;
+        this.username = username;
     }
 
     public void addOrderProduct(OrderProduct orderProduct) {
@@ -79,5 +83,13 @@ public class Order {
 
     public void setShipping(double shipping) {
         this.shipping = shipping;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

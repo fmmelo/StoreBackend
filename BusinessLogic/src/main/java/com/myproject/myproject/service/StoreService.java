@@ -131,6 +131,7 @@ public class StoreService {
         cart.checkout();
         cartRepo.save(cart);
 
+        order.setUsername(username);
         order.setTotal(total);
         order.setShipping(shipping);
         orderRepo.save(order);
@@ -147,12 +148,14 @@ public class StoreService {
     }
 
     public ResponseEntity<?> getAllOrders(String token) {
+        String username;
         try {
-            authClient.validateToken(token);
+            username = authClient.validateToken(token).username();
         } catch (InvalidTokenException e) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Token was not valid", token));
         }
-        return ResponseEntity.ok(orderRepo.findAll().stream().map(o -> new OrderDTO(o)).toList());
+
+        return ResponseEntity.ok(orderRepo.findAllByUsernameOrderById(username).stream().map(o -> new OrderDTO(o)).toList());
     }
 
     public ResponseEntity<?> addToCart(Long itemId, int quantity, String token) {
