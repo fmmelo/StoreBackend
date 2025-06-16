@@ -19,17 +19,18 @@ const register = async (req, res) => {
 const activateUser = async (req, res) => {
     try {
         const token = req.params.token
-        console.log(token)
-        const tokenObj = await service.activateUser(token)
-        if(tokenObj) {
+        const user = await service.activateUser(token)
+        if (user) {
             res.status(StatusCodes.ACCEPTED).send("Account created");
+        } else {
+            res.status(StatusCodes.BAD_REQUEST).send("Something went wrong");
         }
-    } catch(e) {
-        if(e instanceof InvalidTokenException)
+    } catch (e) {
+        if (e instanceof InvalidTokenException)
             res.status(StatusCodes.UNAUTHORIZED).send(e.message)
-        else if(e instanceof UserNotFoundException)
+        else if (e instanceof UserNotFoundException)
             res.status(StatusCodes.NOT_FOUND).send(e.message)
-        else if(e instanceof UserIsAlreadyActiveException)
+        else if (e instanceof UserIsAlreadyActiveException)
             res.status(StatusCodes.BAD_REQUEST).send(e.message)
     }
 }
@@ -43,7 +44,7 @@ const login = async (req, res) => {
             res.status(StatusCodes.BAD_REQUEST).send(e.message);
         else if (e instanceof UserNotFoundException)
             res.status(StatusCodes.NOT_FOUND).send(e.message);
-        else if(e instanceof UserNotActiveException)
+        else if (e instanceof UserNotActiveException)
             res.status(StatusCodes.BAD_REQUEST).send(e.message);
         else if (e instanceof WrongCredentialsException)
             res.status(StatusCodes.UNAUTHORIZED).send(e.message);
@@ -71,7 +72,7 @@ const verifyToken = async (req, res) => {
     } catch (e) {
         if (e instanceof MissingTokenException)
             res.status(StatusCodes.BAD_REQUEST).send(e.message);
-        else if(e instanceof UserNotActiveException)
+        else if (e instanceof UserNotActiveException)
             res.status(StatusCodes.BAD_REQUEST).send(e.message);
         else if (e instanceof InvalidTokenException)
             res.status(StatusCodes.UNAUTHORIZED).send(e.message);
