@@ -1,4 +1,4 @@
-const { UserNotFoundException, WrongCredentialsException, MissingCredentialsException, UserExistsException, MissingTokenException, InvalidTokenException, EmptyUsernameException } = require("../exception/userExceptions");
+const { UserNotFoundException, WrongCredentialsException, MissingCredentialsException, UserExistsException, MissingTokenException, InvalidTokenException, EmptyUsernameException, UserNotActiveException } = require("../exception/userExceptions");
 const service = require("../service/authService")
 const { StatusCodes } = require('http-status-codes')
 

@@ -18,7 +18,7 @@ const registerUser = async ({ username, email, password }) => {
         password: password
     });
     await user.save();
-    
+
     sendAccountConfirmationEmail([email], token)
     return token;
 }
@@ -28,11 +28,11 @@ const activateUser = async (token) => {
         if (err) throw new InvalidTokenException();
         return user;
     })
-    const user = await User.findOne({username: tokenObj.username})
-    if(!user) 
+    const user = await User.findOne({ username: tokenObj.username })
+    if (!user)
         throw new UserNotFoundException(tokenObj.username)
 
-    if(user.isActive)
+    if (user.isActive)
         throw new UserIsAlreadyActiveException(tokenObj.username)
 
     user.isActive = true;
@@ -50,8 +50,8 @@ const loginUser = async ({ username, password }) => {
     if (!user)
         throw new UserNotFoundException(username);
 
-    if(!user.isActive)
-        throw new UserNotActiveException();
+    if (!user.isActive)
+        throw new UserNotActiveException(username);
 
     if (user.password !== password)
         throw new WrongCredentialsException();
@@ -83,7 +83,7 @@ const verifyToken = async (token) => {
     if (!user)
         throw new InvalidTokenException(token);
 
-    if(!user.isActive)
+    if (!user.isActive)
         throw new UserNotActiveException();
 
     const tokenObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
