@@ -1,4 +1,14 @@
-const { UserNotFoundException, WrongCredentialsException, MissingCredentialsException, UserExistsException, MissingTokenException, InvalidTokenException, EmptyUsernameException, UserNotActiveException } = require("../exception/userExceptions");
+const {
+    UserNotFoundException,
+    WrongCredentialsException,
+    MissingCredentialsException,
+    UserExistsException,
+    MissingTokenException,
+    InvalidTokenException,
+    EmptyUsernameException,
+    UserNotActiveException,
+    UserIsAlreadyActiveException
+} = require("../exception/userExceptions");
 const service = require("../service/authService")
 const { StatusCodes } = require('http-status-codes')
 
@@ -17,14 +27,11 @@ const register = async (req, res) => {
 }
 
 const activateUser = async (req, res) => {
+    console.log("called")
     try {
         const token = req.params.token
-        const user = await service.activateUser(token)
-        if (user) {
-            res.status(StatusCodes.ACCEPTED).send("Account created");
-        } else {
-            res.status(StatusCodes.BAD_REQUEST).send("Something went wrong");
-        }
+        await service.activateUserAccount(token)
+        res.status(StatusCodes.ACCEPTED).send("Account created");
     } catch (e) {
         if (e instanceof InvalidTokenException)
             res.status(StatusCodes.UNAUTHORIZED).send(e.message)

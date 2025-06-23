@@ -11,7 +11,6 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendAccountConfirmationEmail = async (recipients, token) => {
-    console.log(recipients)
     const info = await transporter.sendMail({
         from: '"Web Store"',
         replyTo: 'no-reply',
@@ -22,7 +21,7 @@ const sendAccountConfirmationEmail = async (recipients, token) => {
             <html>
                 <body>
                     <h3>Please confirm account</h3><br/>
-                    <span>Click <a href='http://localhost:5050/auth/activate/${token}'>here</a> to confirm your account</span><br/>
+                    <span>Click <a href='http://localhost:4200/activate/${token}'>here</a> to confirm your account</span><br/>
                     <span>Wasn't you? Ignore this email</span><br/>
                 </body>
             </html>

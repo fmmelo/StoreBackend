@@ -23,7 +23,7 @@ const registerUser = async ({ username, email, password }) => {
     return token;
 }
 
-const activateUser = async (token) => {
+const activateUserAccount = async (token) => {
     const tokenObj = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) throw new InvalidTokenException();
         return user;
@@ -36,7 +36,7 @@ const activateUser = async (token) => {
         throw new UserIsAlreadyActiveException(tokenObj.username)
 
     user.isActive = true;
-    user.save();
+    await user.save();
 
     return user;
 }
@@ -111,5 +111,5 @@ module.exports = {
     logoutUser,
     verifyToken,
     userExists,
-    activateUser
+    activateUserAccount
 }
