@@ -5,6 +5,8 @@
 Personal project to help me learn and develop my experience in what I find to be my passion in programming, which is Web Development. 
 With this project I aim to improve my code writing abilities, library/api usage, readability, stack and logical thinking.
 
+You can find the frontend <a href="https://github.com/fmmelo/StoreFrontend">here</a>
+
 ### Description
 
 This project is a mock-up of an ecomerce app with made up products fetched from the <a href="https://fakestoreapi.com/">fakestoreapi</a>.
